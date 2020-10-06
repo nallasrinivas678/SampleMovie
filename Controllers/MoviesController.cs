@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SampleMovie.Data;
 using SampleMovie.Models;
+using SampleMovie.ViewModels;
+using System.Collections.Generic;
 
 namespace SampleMovie.Controllers
 {
@@ -20,9 +22,27 @@ namespace SampleMovie.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string genre, string searchString)
         {
-            return View(await _context.Movie.ToListAsync());
+            IQueryable<string> genreQuery = from m in _context.Movie
+                                            orderby m.Genre
+                                            select m.Genre;
+            var movies = from m in _context.Movie
+                         select m;
+            if (!string.IsNullOrEmpty(genre))
+            {
+                movies = movies.Where(x => x.Genre.Contains(genre));
+            }
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                movies = movies.Where(x => x.Title.Contains(searchString));
+            }
+            var movieGenreVM = new MovieGenre
+            {
+                Movies = await movies.ToListAsync(),
+                Genres = new SelectList(await genreQuery.Distinct().ToListAsync())
+            };
+            return View(movieGenreVM);
         }
 
         // GET: Movies/Details/5
