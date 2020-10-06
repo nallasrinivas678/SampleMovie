@@ -27,7 +27,6 @@ namespace SampleMovie
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-
             services.AddDbContext<MVCMovieContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("MVCMovieContext")));
             services.AddDbContext<MVCMovieContext>(options =>
