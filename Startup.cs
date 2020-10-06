@@ -5,9 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SampleMovie.Models;
+using SampleMovie.Data;
 
 namespace SampleMovie
 {
@@ -24,6 +27,11 @@ namespace SampleMovie
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddDbContext<MVCMovieContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("MVCMovieContext")));
+            services.AddDbContext<MVCMovieContext>(options =>
+           options.UseSqlServer(Configuration.GetConnectionString("MVCMovieContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
